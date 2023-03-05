@@ -1,0 +1,64 @@
+---
+- name: Setup homelab server
+  hosts: feanor
+  pre_tasks:
+    - name: Ensure UFW is installed
+      become: true
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+        update_cache: true
+
+  roles:
+    - role: egdoc.dotfiles
+      tags: dotfiles
+
+    - role: egdoc.vim
+      become: true
+      tags: vim
+
+    - role: egdoc.vim_plugins
+      tags: vim
+
+
+  tasks:
+    - name: Setup SSH
+      block:
+        - name: Ensure ssh key is authorized
+          ansible.posix.authorized_key:
+            user: '{{ ansible_user }}'
+            state: present
+            key: '{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
+          tags: ssh
+
+        - name: Ensure UFW is enabled and SSH traffic is allowed
+          become: true
+          community.general.ufw:
+            state: enabled
+            rule: allow
+            name: SSH
+            src: 192.168.0.0/24
+          tags: ufw
+
+    - name: Setup Samba shared directories
+      become: true
+      block:
+        - name: Ensure Unix users exists
+          tags: unix_users
+          ansible.builtin.user:
+            name: '{{ item }}'
+            create_home: false
+            shell: /usr/sbin/nologin
+          loop: '{{ samba_users | map(attribute="name") | list }}'
+
+        - name: Import egdoc.samba role
+          ansible.builtin.import_role:
+            name: egdoc.samba
+
+        - name: Ensure UFW is enabled and ports are opened
+          community.general.ufw:
+            state: enabled
+            rule: allow
+            name: samba
+            src: 192.168.0.0/24
+      tags: samba

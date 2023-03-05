@@ -1,0 +1,101 @@
+---
+user: '{{ lookup("ansible.builtin.env", "USER") }}'
+
+docker_users: '{{ user }}'
+
+accountsservice_users:
+  - name: '{{ user }}'
+    icon: https://avatars.githubusercontent.com/u/19516755?v=4
+    language: en_US.UTF-8
+
+hosts_entries: '{{ _vault_hosts_entries }}'
+
+jetbrains_ide: pycharm-community
+
+dconf_keys:
+  - key: /org/gnome/desktop/background/picture-options
+    value: "'zoom'"
+  - key: /org/gnome/desktop/background/picture-uri
+    value: "'file:///home/doc/.local/share/backgrounds/data-cloud-6109319'"
+  - key: /org/gnome/desktop/background/picture-uri-dark
+    value: "'file:///home/doc/.local/share/backgrounds/data-cloud-6109319'"
+  - key: /org/gnome/desktop/sound/event-sounds
+    value: 'false'
+  - key: /org/gnome/desktop/interface/show-battery-percentage
+    value: 'true'
+  - key: /org/gnome/desktop/peripherals/touchpad/natural-scroll
+    value: 'false'
+  - key: /org/gnome/desktop/peripherals/touchpad/tap-to-click
+    value: 'true'
+  - key: /org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled
+    value: 'true'
+  - key: /org/gnome/settings-daemon/plugins/media-keys/home
+    value: "['<Super>f']"
+  - key: /org/gnome/settings/daemon/plugins/media-keys/www
+    value: "['<Super>w']"
+  - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name
+    value: "'Launch terminal'"
+  - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command
+    value: "'kgx'"
+  - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding
+    value: "'<Super>Return'"
+  - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings,
+    value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+  - key: /org/gnome/TextEditor/indent-style
+    value: "'space'"
+  - key: /org/gnome/TextEditor/spellcheck
+    value: 'false'
+  - key: /org/gnome/TextEditor/tab-width
+    value: 'uint32 2'
+  - key: /org/gnome/TextEditor/wrap-text
+    value: 'false'
+  - key: /org/gnome/TextEditor/show-line-numbers
+    value: 'true'
+  - key: /org/gnome/TextEditor/restore-session
+    value: 'false'
+  - key: /org/gnome/nautilus/icon-view/default-zoom-level
+    value: "'standard'"
+  - key: /org/gnome/nautilus/icon-view/captions
+    value: "['permissions', 'none', 'none' ]"
+  - key: /org/gnome/nautilus/preferences/click-policy
+    value: "'single'"
+  - key: /org/gtk/gtk4/settings/file-chooser/sort-directories-first
+    value: 'true'
+  - key: /org/gtk/settings/file-chooser/sort-directories-first
+    value: 'true'
+  - key: /org/gnome/mutter/center-new-windows
+    value: 'true'
+
+dotfiles_files:
+  - bash_profile
+  - bashrc
+  - gitconfig
+  - lftprc
+  - vim
+  - vimrc
+  - gvimrc
+
+vim_install_gvim: true
+vim_plugins_repositories:
+  - url: https://github.com/tpope/vim-surround
+  - url: https://github.com/preservim/nerdcommenter
+  - url: https://github.com/preservim/nerdtree
+  - url: https://github.com/altercation/vim-colors-solarized
+    category: colorschemes
+    autostart: false
+  - url: https://github.com/egdoc/ayu-vim
+    category: colorschemes
+    autostart: false
+  - url: https://github.com/tpope/vim-fugitive
+  - url: https://github.com/airblade/vim-gitgutter
+  - url: https://github.com/neoclide/coc.nvim
+    branch: release
+  - url: https://github.com/pearofducks/ansible-vim
+    autostart: true
+
+firefox_policy_file: files/firefox_policies.json
+
+nfs_shares:
+  - src: 'feanor.lan:/srv/data'
+    path: /mnt/nfs
+    opts: 'defaults,noexec,nosuid'

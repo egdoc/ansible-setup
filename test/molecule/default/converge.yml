@@ -1,0 +1,5 @@
+---
+- name: Import workstation setup playbook
+  ansible.builtin.import_playbook: ../../../setup_workstation.yml
+  vars:
+    user: vagrant

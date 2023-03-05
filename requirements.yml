@@ -1,0 +1,12 @@
+roles:
+  - egdoc.accountsservice
+  - egdoc.dotfiles
+  - egdoc.flatpak
+  - egdoc.google_chrome
+  - egdoc.jetbrains
+  - egdoc.samba
+  - egdoc.vim
+  - egdoc.vim_plugins
+  - egdoc.vscode
+  - geerlingguy.docker
+  - geerlingguy.raspberry-pi

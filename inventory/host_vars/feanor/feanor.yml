@@ -1,0 +1,27 @@
+---
+dotfiles_files:
+  - vim
+  - vimrc
+
+samba_users: '{{ _vault_samba_users }}'
+ 
+samba_shares:
+  - name: Data
+    path: /srv/data
+    comment: Shared data
+    writable: false
+    guest_ok: false
+    shared_path_owner: '{{ samba_users[0].name }}'
+    shared_path_group: '{{ samba_users[0].name }}'
+    shared_path_mode: '755'
+
+vim_plugins_repositories:
+  - url: https://github.com/tpope/vim-surround
+  - url: https://github.com/preservim/nerdcommenter
+  - url: https://github.com/preservim/nerdtree
+  - url: https://github.com/altercation/vim-colors-solarized
+    category: colorschemes
+    autostart: false
+  - url: https://github.com/egdoc/ayu-vim
+    category: colorschemes
+    autostart: false

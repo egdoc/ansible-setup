@@ -1,0 +1,14 @@
+{
+  "policies": {
+    "DisableSetDesktopBackground": true,
+    "DisableTelemetry": true,
+    "DNSOverHTTPS": {
+      "Enabled": true
+    },
+    "EnableTrackingProtection": {
+      "Value": true
+    },
+    "GoToIntranetSiteForSingleWordEntryInAddressBar": true,
+    "NoDefaultBookmarks": true
+  }
+}

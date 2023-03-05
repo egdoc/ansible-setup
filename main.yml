@@ -1,0 +1,6 @@
+---
+- name: Setup workstation
+  ansible.builtin.import_playbook: setup_workstation.yml
+
+- name: Setup server
+  ansible.builtin.import_playbook: setup_server.yml

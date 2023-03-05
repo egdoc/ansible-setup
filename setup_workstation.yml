@@ -1,0 +1,116 @@
+---
+- name: Setup Linux Workstation
+  hosts: localhost
+  pre_tasks:
+    - name: Ensure git is installed
+      become: true
+      ansible.builtin.dnf:
+        name: git
+        state: present
+
+  roles:
+    - role: geerlingguy.docker
+      become: true
+      tags: docker
+
+    - role: egdoc.google_chrome
+      become: true
+      tags: chrome
+
+    - role: egdoc.vscode
+      become: true
+      tags: vscode
+
+    - role: egdoc.dotfiles
+      tags: dotfiles
+
+    - role: egdoc.vim
+      become: true
+      tags: vim
+
+    - role: egdoc.vim_plugins
+      tags: vim
+
+    - role: egdoc.accountsservice
+      become: true
+      tags: accountsservice
+
+    - role: egdoc.jetbrains
+      tags: ide
+
+  tasks:
+    - name: Add entries in /etc/hosts
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        regexp: '^{{ item.ip }}'
+        line: '{{ item.ip }} {{ item.name }} {{ item.alias | default("")  }}'
+        owner: root
+        group: root
+        mode: '644'
+      loop: '{{ hosts_entries | default([]) }}'
+      tags: hosts
+
+    - name: Ensure Firefox is installed and deploy policy
+      become: true
+      block:
+        - name: Ensure Firefox is installed
+          ansible.builtin.dnf:
+            name: firefox
+            state: present
+
+        - name: Ensure /etc/firefox/policies directory exists
+          ansible.builtin.file:
+            path: /etc/firefox/policies
+            state: directory
+            owner: root
+            group: root
+            mode: '755'
+
+        - name: Ensure policy file is in place
+          ansible.builtin.copy:
+            src: '{{ firefox_policy_file }}'
+            dest: /etc/firefox/policies/policies.json
+            owner: root
+            group: root
+            mode: '644'
+          when: firefox_policy_file is defined
+      tags: firefox
+
+    - name: Mount nfs shares
+      become: true
+      block:
+        - name: Ensure nfs-utils is installed
+          ansible.builtin.package:
+            name: nfs-utils
+            state: present
+
+        - name: Mount the NFS share and add fstab entry
+          ansible.posix.mount:
+            boot: true
+            fstype: nfs
+            src: '{{ item.src }}'
+            path: '{{ item.path }}'
+            opts: '{{ item.opts }}'
+            state: mounted
+          loop: '{{ nfs_shares }}'
+      when: nfs_shares is defined and nfs_shares | length > 0
+      tags:
+        - nfs
+        - notest
+
+    - name: Setup dconf database
+      block:
+        - name: Ensure psutil is installed
+          become: true
+          ansible.builtin.dnf:
+            name: python3-psutil
+            state: present
+
+        - name: Write rules
+          community.general.dconf:
+            key: '{{ item.key }}'
+            value: '{{ item.value }}'
+          loop: '{{ dconf_keys | default([]) }}'
+      when: '"XDG_CURRENT_DESKTOP" in ansible_facts.env and ansible_facts.env.XDG_CURRENT_DESKTOP | lower == "gnome"'
+      tags: dconf

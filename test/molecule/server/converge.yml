@@ -1,0 +1,3 @@
+---
+- name: Import server setup playbook
+  ansible.builtin.import_playbook: ../../../setup_server.yml

@@ -1,0 +1,4 @@
+---
+dotfiles_force_link: true
+vim_global_editor: true
+vim_plugins_use_native_packages: true
